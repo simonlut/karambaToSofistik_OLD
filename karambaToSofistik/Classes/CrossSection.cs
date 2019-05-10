@@ -14,7 +14,7 @@ namespace karambaToSofistik.Classes {
         public string name;
         public Material material;
         
-        public CrossSection(Karamba.CrossSections.CroSec crosec = null) {
+        public CrossSection(Karamba.CrossSections.CroSec crosec = null, int cros_id = 0) {
             id       = 1;
             ids      = new List<string>();
             shape    = "";
@@ -31,12 +31,12 @@ namespace karambaToSofistik.Classes {
                      = filletRadius 
                      = 0;
 
-            if(crosec != null)
-                hydrate(crosec);
+            if(crosec != null && crosec.user_defined == true)
+                hydrate(crosec, cros_id);
         }
 
-        public void hydrate(Karamba.CrossSections.CroSec crosec) {
-            id = 1; // Sofistik begins at 1 not 0
+        public void hydrate(Karamba.CrossSections.CroSec crosec, int cros_id) {
+            id = cros_id; // Sofistik begins at 1 not 0
             ids = crosec.elemIds;
             name = crosec.name;
             shape = crosec.shape();

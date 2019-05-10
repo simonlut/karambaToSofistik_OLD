@@ -10,9 +10,9 @@ namespace karambaToSofistik.Classes {
         public double E, G, gamma, alphaT, fy;
         string name;
 
-        public Material(Karamba.Materials.FemMaterial material = null, int mat_id = 1) {
+        public Material(Karamba.Materials.FemMaterial material = null, int mat_id = 0) {
             ids  = new List<string>();
-            id   = 1;
+            id   = 0;
             E    = G 
                  = gamma 
                  = alphaT 

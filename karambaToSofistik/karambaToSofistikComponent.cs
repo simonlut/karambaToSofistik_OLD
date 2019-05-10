@@ -75,17 +75,19 @@ namespace karambaToSofistik {
 
                     // Retrieve and store the data
                     // Materials
-                    for(int i=1; i< model.materials.Count; i++)
+                    for(int i=0; i< model.materials.Count; i++)
                     {
-                        materials.Add(new Material(model.materials[i],i));
+                        materials.Add(new Material(model.materials[i], i+1));
                     }
 
                     status += materials.Count + " materials loaded...\n";
 
                     // Cross sections
-                    foreach (Karamba.CrossSections.CroSec crosec in model.crosecs) {
-                        crossSections.Add(new CrossSection(crosec));
+                    for (int i = 0; i<model.crosecs.Count; i++)
+                    {
+                       crossSections.Add(new CrossSection(model.crosecs[i], i+1));
                     }
+
 
                     // Nodes
                     foreach (Karamba.Nodes.Node node in model.nodes) {

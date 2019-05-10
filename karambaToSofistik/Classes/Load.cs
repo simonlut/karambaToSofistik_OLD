@@ -52,52 +52,111 @@ namespace karambaToSofistik.Classes {
         public string sofistring() {
             id = Parser.id_count;
             Parser.id_count++;
-
-            switch (type) { 
-                case "G":
-                    return "LC NO " + id + " TYPE P\nBEAM FROM 1 TO 999999 TYPE PXX,PYY,PZZ" 
-                                         + " PA " + Math.Round(force.X, 3)
-                                         + ","    + Math.Round(force.Y, 3)
-                                         + ","    + Math.Round(force.Z, 3);
-                case "P":
-                    return "LC NO " + id + " TYPE L\nNODE NO " + node.id
-                                         + " TYPE PP"
-                                         + " P1 " + Math.Round(force.X, 3)
-                                         + " P2 " + Math.Round(force.Y, 3)
-                                         + " P3 " + Math.Round(force.Z, 3);
-                case "E":
-                case "S":
-                case "T":
-                    string from = "";
-                    if (beam_id == "")
-                        from = "1 TO 999999";
-                    else
-                        from = "GRP " + karambaToSofistikComponent.beam_groups.IndexOf(beam_id);
-
-                    if (type == "E") {
-                        string load_type = "";
-                        if (orientation == 0)
-                            load_type = "PX,PY,PZ";
-                        else if (orientation == 2)
-                            load_type = "PXP,PYP,PZP";
-                        else
-                            load_type = "PXX,PYY,PZZ";
-
-                        return "LC NO " + id + " TYPE L\nBEAM FROM " + from
-                                             + " TYPE " + load_type
+            if (id == 1)
+            {
+                switch (type)
+                {
+                    case "G":
+                        return "LC NO " + id + " TYPE P\nBEAM FROM 1 TO 999999 TYPE PXX,PYY,PZZ"
                                              + " PA " + Math.Round(force.X, 3)
-                                             + ","    + Math.Round(force.Y, 3)
-                                             + ","    + Math.Round(force.Z, 3);
-                    }
-                    else if(type == "S") {
-                        return "LC NO " + id + " TYPE L\nBEAM FROM " + from
-                                             + " TYPE PNX PA " + coef;
-                    }
-                    else if (type == "T") {
-                        return "LC NO " + id + " TYPE L\nBEAM FROM " + from
-                                             + " TYPE TEMP PA " + coef;
-                    }
-                    break;
+                                             + "," + Math.Round(force.Y, 3)
+                                             + "," + Math.Round(force.Z, 3);
+                    case "P":
+                        return "LC NO " + id + " TYPE L\nNODE NO " + node.id
+                                             + " TYPE PP"
+                                             + " P1 " + Math.Round(force.X, 3)
+                                             + " P2 " + Math.Round(force.Y, 3)
+                                             + " P3 " + Math.Round(force.Z, 3);
+                    case "E":
+                    case "S":
+                    case "T":
+                        string from = "";
+                        if (beam_id == "")
+                            from = "1 TO 999999";
+                        else
+                            from = "GRP " + karambaToSofistikComponent.beam_groups.IndexOf(beam_id);
+
+                        if (type == "E")
+                        {
+                            string load_type = "";
+                            if (orientation == 0)
+                                load_type = "PX,PY,PZ";
+                            else if (orientation == 2)
+                                load_type = "PXP,PYP,PZP";
+                            else
+                                load_type = "PXX,PYY,PZZ";
+
+                            return "LC NO " + id + " TYPE L\nBEAM FROM " + from
+                                                 + " TYPE " + load_type
+                                                 + " PA " + Math.Round(force.X, 3)
+                                                 + "," + Math.Round(force.Y, 3)
+                                                 + "," + Math.Round(force.Z, 3);
+                        }
+                        else if (type == "S")
+                        {
+                            return "LC NO " + id + " TYPE L\nBEAM FROM " + from
+                                                 + " TYPE PNX PA " + coef;
+                        }
+                        else if (type == "T")
+                        {
+                            return "LC NO " + id + " TYPE L\nBEAM FROM " + from
+                                                 + " TYPE TEMP PA " + coef;
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                switch (type)
+                {
+                    case "G":
+                        return "BEAM FROM 1 TO 999999 TYPE PXX,PYY,PZZ"
+                                             + " PA " + Math.Round(force.X, 3)
+                                             + "," + Math.Round(force.Y, 3)
+                                             + "," + Math.Round(force.Z, 3);
+                    case "P":
+                        return "NODE NO " + node.id
+                                             + " TYPE PP"
+                                             + " P1 " + Math.Round(force.X, 3)
+                                             + " P2 " + Math.Round(force.Y, 3)
+                                             + " P3 " + Math.Round(force.Z, 3);
+                    case "E":
+                    case "S":
+                    case "T":
+                        string from = "";
+                        if (beam_id == "")
+                            from = "1 TO 999999";
+                        else
+                            from = "GRP " + karambaToSofistikComponent.beam_groups.IndexOf(beam_id);
+
+                        if (type == "E")
+                        {
+                            string load_type = "";
+                            if (orientation == 0)
+                                load_type = "PX,PY,PZ";
+                            else if (orientation == 2)
+                                load_type = "PXP,PYP,PZP";
+                            else
+                                load_type = "PXX,PYY,PZZ";
+
+                            return "BEAM FROM " + from
+                                                 + " TYPE " + load_type
+                                                 + " PA " + Math.Round(force.X, 3)
+                                                 + "," + Math.Round(force.Y, 3)
+                                                 + "," + Math.Round(force.Z, 3);
+                        }
+                        else if (type == "S")
+                        {
+                            return "BEAM FROM " + from
+                                                 + " TYPE PNX PA " + coef;
+                        }
+                        else if (type == "T")
+                        {
+                            return "BEAM FROM " + from
+                                                 + " TYPE TEMP PA " + coef;
+                        }
+                        break;
+                }
             }
             return "";
         }
