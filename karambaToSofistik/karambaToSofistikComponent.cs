@@ -104,7 +104,7 @@ namespace karambaToSofistik {
                     // Beams
                     foreach (Karamba.Elements.ModelElement beam in model.elems) {
                         Beam curBeam = new Beam(beam);
-                        
+
                         // Adding the start and end nodes
                         curBeam.start = nodes[curBeam.ids[0]];
                         curBeam.end = nodes[curBeam.ids[1]];

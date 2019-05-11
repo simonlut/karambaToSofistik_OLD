@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Grasshopper.Kernel;
+using Grasshopper;
 
 namespace karambaToSofistik.Classes {
     class Parser {
         static public int id_count = 1; // Karamba does not provide IDs for loads so we must create one
+        static public List<int> loadcase_count = new List<int>() { 0 }; //Karamba doesn't provide counts of loadcases.
         public string file { get; protected set; }
+
 
         public Parser(List<Material> materials, List<CrossSection> crossSections, List<Node> nodes, List<Beam> beams, List<Load> loads) {
             file = "";
@@ -113,8 +117,23 @@ namespace karambaToSofistik.Classes {
 
             // SOFILOAD definitions
             file += "\n\n+PROG SOFILOAD urs:4\nHEAD Loads\nUNIT 5\n\n";
-            foreach (Load load in loads) {
-                file += load.sofistring() + "\n";
+            foreach(Load load in loads)
+            {
+                if (load.loadcase > loadcase_count.Last())
+                {
+                    loadcase_count.Add(load.loadcase);
+                }
+            }
+            for (int i=0; i<loadcase_count.Count; i++)
+            {   if (i == 0) continue;
+                foreach (Load load in loads)
+                {
+                    if (load.loadcase == loadcase_count[i])
+                    {
+                        file += load.sofistring(loadcase_count[i]) + "\n";
+                    }
+                }
+                id_count = 0;
             }
             
             // Analysis

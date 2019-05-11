@@ -14,7 +14,7 @@ namespace karambaToSofistik.Classes {
         public string type;             // Valid types are "G, P, E" for Gravity, Point and Element Load
         public Vector3d force;
         public double coef;             // For pretension and temperature loads
-        public double loadcase;
+        public int loadcase;
 
 
 
@@ -25,7 +25,7 @@ namespace karambaToSofistik.Classes {
             id = 1;
             coef = 0;
             force = new Vector3d();
-            loadcase = 1.0;
+            loadcase = 1;
         }
 
         public Load() { init(""); }
@@ -56,21 +56,20 @@ namespace karambaToSofistik.Classes {
             loadcase = load.loadcase;
         }
 
-        public string sofistring() {
+        public string sofistring(int lc_no) {
             id = Parser.id_count;
             Parser.id_count++;
-            
             if (id == 1)
             {
                 switch (type)
                 {
                     case "G":
-                        return "LC NO " + id + " TYPE P\nBEAM FROM 1 TO 999999 TYPE PXX,PYY,PZZ"
+                        return "LC NO " + lc_no + 1 + " TYPE P\nBEAM FROM 1 TO 999999 TYPE PXX,PYY,PZZ"
                                              + " PA " + Math.Round(force.X, 3)
                                              + "," + Math.Round(force.Y, 3)
                                              + "," + Math.Round(force.Z, 3);
                     case "P":
-                        return "LC NO " + id + " TYPE L\nNODE NO " + node.id
+                        return "LC NO " + lc_no + 1 + " TYPE L\nNODE NO " + node.id
                                              + " TYPE PP"
                                              + " P1 " + Math.Round(force.X, 3)
                                              + " P2 " + Math.Round(force.Y, 3)
