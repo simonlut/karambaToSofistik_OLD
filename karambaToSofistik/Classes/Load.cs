@@ -14,7 +14,9 @@ namespace karambaToSofistik.Classes {
         public string type;             // Valid types are "G, P, E" for Gravity, Point and Element Load
         public Vector3d force;
         public double coef;             // For pretension and temperature loads
-        
+        public double loadcase;
+
+
 
         public void init(string par_type) {
             type = par_type;
@@ -23,6 +25,7 @@ namespace karambaToSofistik.Classes {
             id = 1;
             coef = 0;
             force = new Vector3d();
+            loadcase = 1.0;
         }
 
         public Load() { init(""); }
@@ -33,25 +36,30 @@ namespace karambaToSofistik.Classes {
 
         public void hydrate(Karamba.Loads.GravityLoad load) {
             force = load.force;
+            loadcase = load.loadcase;
         }
         public void hydrate(Karamba.Loads.PointLoad load) {
             force = load.force;
+            loadcase = load.loadcase;
         }
 
         public void hydrate(Karamba.Loads.UniformlyDistLoad load) {
             orientation = (int) load.q_orient;
             beam_id = load.beamIds[0];
             force = load.Load;
+            loadcase = load.loadcase;
         }
 
         public void hydrate(Karamba.Loads.TemperatureLoad load) {
             beam_id = load.beamIds[0];
             coef = Math.Round(load.incT, 3);
+            loadcase = load.loadcase;
         }
 
         public string sofistring() {
             id = Parser.id_count;
             Parser.id_count++;
+            
             if (id == 1)
             {
                 switch (type)
@@ -115,7 +123,7 @@ namespace karambaToSofistik.Classes {
                                              + "," + Math.Round(force.Y, 3)
                                              + "," + Math.Round(force.Z, 3);
                     case "P":
-                        return "NODE NO " + node.id
+                        return "Loadcase of load:" + id + ":" + loadcase.ToString() + "\nNODE NO " + node.id
                                              + " TYPE PP"
                                              + " P1 " + Math.Round(force.X, 3)
                                              + " P2 " + Math.Round(force.Y, 3)

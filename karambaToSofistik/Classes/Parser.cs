@@ -39,7 +39,7 @@ namespace karambaToSofistik.Classes {
 
             foreach (string group in karambaToSofistikComponent.beam_groups) {
                 if (karambaToSofistikComponent.beam_groups.Count > 0) {
-                    file += "\nGRP " + karambaToSofistikComponent.beam_groups.IndexOf(group) + ";\n";
+                    file += "\nGRP " + karambaToSofistikComponent.beam_groups.IndexOf(group)+";\n";
                     iterator = 0;
 
                     foreach (Beam beam in beams) {
@@ -116,7 +116,7 @@ namespace karambaToSofistik.Classes {
             foreach (Load load in loads) {
                 file += load.sofistring() + "\n";
             }
-
+            
             // Analysis
             file += "\nEND\n\n\n+PROG ASE urs:13\nHEAD Solving\n\nSYST PROB LINE\nLC ALL\n\nEND\n";
         }

@@ -75,7 +75,7 @@ namespace karambaToSofistik {
 
                     // Retrieve and store the data
                     // Materials
-                    for(int i=0; i< model.materials.Count; i++)
+                    for(int i = 0; i< model.materials.Count; i++)
                     {
                         materials.Add(new Material(model.materials[i], i+1));
                     }
@@ -104,7 +104,7 @@ namespace karambaToSofistik {
                     // Beams
                     foreach (Karamba.Elements.ModelElement beam in model.elems) {
                         Beam curBeam = new Beam(beam);
-
+                        
                         // Adding the start and end nodes
                         curBeam.start = nodes[curBeam.ids[0]];
                         curBeam.end = nodes[curBeam.ids[1]];
@@ -113,11 +113,10 @@ namespace karambaToSofistik {
 
                     status += beams.Count + " beams loaded...\n";
 
-
                     // Loads
                     foreach (KeyValuePair<int, Karamba.Loads.GravityLoad> load in model.gravities) {
                         loads.Add(new Load(load));
-                    }
+                        }
                     status += model.gravities.Count + " gravity loads added.\n";
                     foreach (Karamba.Loads.PointLoad load in model.ploads) {
                         Load current = new Load(load);
@@ -129,11 +128,10 @@ namespace karambaToSofistik {
                     foreach (Karamba.Loads.ElementLoad load in model.eloads) {
                         // Create a load variable base on the load type
                         Load current = new Load();
-
                         Karamba.Loads.UniformlyDistLoad line = load as Karamba.Loads.UniformlyDistLoad;
                         //Karamba.Loads.PreTensionLoad pret = load as Karamba.Loads.PreTensionLoad;
                         Karamba.Loads.TemperatureLoad temp = load as Karamba.Loads.TemperatureLoad;
-                                
+
                         if (line != null) {
                             current = new Load(line);
                         }
@@ -160,8 +158,6 @@ namespace karambaToSofistik {
                         }
                     }
 
-                    status += model.eloads.Count + " line loads added.\n";
-
                     // ID matching
                     // Karamba and Sofistik use different ID systems
                     // Karamba's materials and cross sections are pointing to an element ID
@@ -176,7 +172,7 @@ namespace karambaToSofistik {
                         }
                         if (test) {
                             foreach (CrossSection crosec in crossSections) {
-                                if(material.ids.Contains((crosec.id - 1).ToString()))
+                                if(material.ids.Contains((crosec.id).ToString()))
                                     crosec.material = material;
                             }
                         }
