@@ -64,12 +64,12 @@ namespace karambaToSofistik.Classes {
                 switch (type)
                 {
                     case "G":
-                        return "LC NO " + lc_no + 1 + " TYPE P\nBEAM FROM 1 TO 999999 TYPE PXX,PYY,PZZ"
+                        return "\nLC NO " + lc_no + " TYPE P\nBEAM FROM 1 TO 999999 TYPE PXX,PYY,PZZ"
                                              + " PA " + Math.Round(force.X, 3)
                                              + "," + Math.Round(force.Y, 3)
                                              + "," + Math.Round(force.Z, 3);
                     case "P":
-                        return "LC NO " + lc_no + 1 + " TYPE L\nNODE NO " + node.id
+                        return "\nLC NO " + lc_no + " TYPE L\nNODE NO " + node.id
                                              + " TYPE PP"
                                              + " P1 " + Math.Round(force.X, 3)
                                              + " P2 " + Math.Round(force.Y, 3)
@@ -122,7 +122,7 @@ namespace karambaToSofistik.Classes {
                                              + "," + Math.Round(force.Y, 3)
                                              + "," + Math.Round(force.Z, 3);
                     case "P":
-                        return "Loadcase of load:" + id + ":" + loadcase.ToString() + "\nNODE NO " + node.id
+                        return "NODE NO " + node.id
                                              + " TYPE PP"
                                              + " P1 " + Math.Round(force.X, 3)
                                              + " P2 " + Math.Round(force.Y, 3)

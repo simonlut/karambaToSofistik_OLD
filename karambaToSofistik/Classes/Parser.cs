@@ -133,7 +133,7 @@ namespace karambaToSofistik.Classes {
                         file += load.sofistring(loadcase_count[i]) + "\n";
                     }
                 }
-                id_count = 0;
+                id_count = 1;
             }
             
             // Analysis
