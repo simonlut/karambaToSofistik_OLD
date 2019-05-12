@@ -24,8 +24,11 @@ namespace karambaToSofistik.Classes {
             }
             file += "\n";
             foreach (CrossSection crossSection in crossSections) {
-                if (crossSection.sofistring() != "")
-                    file += crossSection.sofistring() + "\n";
+                for(int i=0; i<materials.Count; i++)
+                {
+                    if (crossSection.sofistring(materials[i]) != "")
+                        file += crossSection.sofistring(materials[i]) + "\n";
+                }
             }
 
             // SOFIMSHA definitions
@@ -43,7 +46,7 @@ namespace karambaToSofistik.Classes {
 
             foreach (string group in karambaToSofistikComponent.beam_groups) {
                 if (karambaToSofistikComponent.beam_groups.Count > 0) {
-                    file += "\nGRP " + karambaToSofistikComponent.beam_groups.IndexOf(group)+";\n";
+                    file += "\nGRP " + (karambaToSofistikComponent.beam_groups.IndexOf(group)+1)+";\n";
                     iterator = 0;
 
                     foreach (Beam beam in beams) {

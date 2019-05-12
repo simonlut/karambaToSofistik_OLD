@@ -50,6 +50,7 @@ namespace karambaToSofistik {
 
             // We need to reset some variables because the objects are not freed until Grasshopper is unloaded
             Parser.id_count = 1;
+            Parser.loadcase_count[0] = 0;
 
             try {
                 // Load the data from Karamba
@@ -88,7 +89,6 @@ namespace karambaToSofistik {
                        crossSections.Add(new CrossSection(model.crosecs[i], i+1));
                     }
 
-
                     // Nodes
                     foreach (Karamba.Nodes.Node node in model.nodes) {
                         nodes.Add(new Node(node));
@@ -104,12 +104,17 @@ namespace karambaToSofistik {
                     // Beams
                     foreach (Karamba.Elements.ModelElement beam in model.elems) {
                         Beam curBeam = new Beam(beam);
-
                         // Adding the start and end nodes
                         curBeam.start = nodes[curBeam.ids[0]];
                         curBeam.end = nodes[curBeam.ids[1]];
-                        beams.Add(curBeam);
-                    }
+                        foreach(CrossSection crosec in crossSections)
+                        {
+                            if (crosec.name == beam.crosec.name)
+                            {
+                                crosec.ids.Add(curBeam.id.ToString());
+                            }
+                        }
+                      }
 
                     status += beams.Count + " beams loaded...\n";
 
