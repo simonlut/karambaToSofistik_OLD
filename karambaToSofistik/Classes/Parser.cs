@@ -23,12 +23,10 @@ namespace karambaToSofistik.Classes {
                     file += material.sofistring() + "\n";
             }
             file += "\n";
+
             foreach (CrossSection crossSection in crossSections) {
-                for(int i=0; i<materials.Count; i++)
-                {
-                    if (crossSection.sofistring(materials[i]) != "")
-                        file += crossSection.sofistring(materials[i]) + "\n";
-                }
+                    if (crossSection.sofistring() != "")
+                        file += crossSection.sofistring() + "\n";
             }
 
             // SOFIMSHA definitions

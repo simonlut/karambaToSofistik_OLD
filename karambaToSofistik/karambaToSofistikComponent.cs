@@ -60,7 +60,6 @@ namespace karambaToSofistik {
                 if (!DA.GetData<GH_Model>(0, ref in_gh_model)) return;
                 Model model = in_gh_model.Value;
                 model = (Karamba.Models.Model) model.Clone(); // If the model is not cloned a modification to this variable will imply modification of the input model, thus modifying behavior in other components.
-
                 if (model == null) {
                     status += "ERROR: The input model is null.";
                     output = "Nothing to convert";
@@ -87,6 +86,36 @@ namespace karambaToSofistik {
                     for (int i = 0; i<model.crosecs.Count; i++)
                     {
                        crossSections.Add(new CrossSection(model.crosecs[i], i+1));
+
+                    }
+
+                    //Add beam ids to Cross sections
+                    foreach (Karamba.Elements.ModelBeam beam in model.elems)
+                    {
+                        foreach (CrossSection crosec in crossSections)
+                        {
+                            if (beam.crosec.name == crosec.name)
+                            {
+                                crosec.ids.Add(beam.ind.ToString());
+                            }
+                            else
+                            {
+                                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Error: Please give unique names to the cross-section groups");
+                            }
+                          
+                        }
+
+                        foreach (Material material in materials)
+                        {
+                            if (beam.crosec.material.name == material.name)
+                            {
+                                material.ids.Add(beam.ind.ToString());
+                            }
+                            else
+                            {
+                                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Error: Please give unique names to the cross-section groups");
+                            }
+                        }
                     }
 
                     // Nodes
@@ -107,13 +136,7 @@ namespace karambaToSofistik {
                         // Adding the start and end nodes
                         curBeam.start = nodes[curBeam.ids[0]];
                         curBeam.end = nodes[curBeam.ids[1]];
-                        foreach(CrossSection crosec in crossSections)
-                        {
-                            if (crosec.name == beam.crosec.name)
-                            {
-                                crosec.ids.Add(curBeam.id.ToString());
-                            }
-                        }
+                        beams.Add(curBeam);
                       }
 
                     status += beams.Count + " beams loaded...\n";

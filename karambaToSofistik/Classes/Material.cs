@@ -8,7 +8,7 @@ namespace karambaToSofistik.Classes {
         public int id;
         public List<string> ids; // Elements to apply to
         public double E, G, gamma, alphaT, fy;
-        string name;
+        public string name;
 
         public Material(Karamba.Materials.FemMaterial material = null, int mat_id = 0) {
             ids  = new List<string>();

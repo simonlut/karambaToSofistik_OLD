@@ -69,7 +69,7 @@ namespace karambaToSofistik.Classes {
                 filletRadius = Math.Round((double) crosec.dims[6] * 1000, 3);
             }
         }
-        public string sofistring(Material material) {
+        public string sofistring() {
 
             // Sofistik wants millimeters
             if (shape == "V") {
