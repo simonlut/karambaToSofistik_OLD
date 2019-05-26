@@ -96,9 +96,20 @@ namespace karambaToSofistik.Classes {
                                      + " T 10";
             }
             else if (shape == "O") {
-                return "TUBE " + id + " MNO " + material.id
-                                    + " D "   + diameter        
-                                    + " T "   + thickness;
+                if(diameter == 2 * thickness)
+                {
+                    return "SCIT " + id + " MNO " + material.id
+                    + " D " + diameter
+                    + " T " + 0.0;
+                }
+                else
+                {
+                    return "SCIT " + id + " MNO " + material.id
+                    + " D " + diameter
+                    + " T " + thickness;
+                }
+
+
             }
             else if (shape == "[]") {
                 return "SREC " + id + " MNO " + material.id

@@ -8,15 +8,14 @@ using Grasshopper;
 namespace karambaToSofistik.Classes {
     class Parser {
         static public int id_count = 1; // Karamba does not provide IDs for loads so we must create one
-        static public List<int> loadcase_count = new List<int>() { 0 }; //Karamba doesn't provide counts of loadcases.
         public string file { get; protected set; }
-
+        public List<int> loadcase_index = new List<int> {};
 
         public Parser(List<Material> materials, List<CrossSection> crossSections, List<Node> nodes, List<Beam> beams, List<Load> loads) {
             file = "";
             
             // AQUA definitions
-            file += "+PROG AQUA urs:1\nHEAD Material and cross section definitions\nUNIT 5\n\n";
+            file += "+PROG AQUA urs:1\nHEAD Material and cross section definitions\nUNIT 5\nNORM DIN EN1992-2004\n\n";
 
             foreach (Material material in materials) {
                 if(material.sofistring() != "")
@@ -117,21 +116,23 @@ namespace karambaToSofistik.Classes {
             }
 
             // SOFILOAD definitions
-            file += "\n\n+PROG SOFILOAD urs:4\nHEAD Loads\nUNIT 5\n\n";
-            foreach(Load load in loads)
+            file += "END\n\n+PROG SOFILOAD urs:4\nHEAD Loads\nUNIT 5\n\n";
+
+
+            foreach( Load load in loads)
             {
-                if (load.loadcase > loadcase_count.Last())
+                if (loadcase_index.Contains(load.loadcase) == false)
                 {
-                    loadcase_count.Add(load.loadcase);
+                    loadcase_index.Add(load.loadcase);
                 }
             }
-            for (int i=0; i<loadcase_count.Count; i++)
-            {   if (i == 0) continue;
-                foreach (Load load in loads)
+
+            for (int i=0; i<loadcase_index.Count; i++)
+            {   foreach (Load load in loads)
                 {
-                    if (load.loadcase == loadcase_count[i])
+                    if (load.loadcase == loadcase_index[i])
                     {
-                        file += load.sofistring(loadcase_count[i]) + "\n";
+                        file += load.sofistring(loadcase_index[i]) + "\n";
                     }
                 }
                 id_count = 1;

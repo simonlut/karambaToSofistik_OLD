@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Beam.cs" />
+    <Compile Include="Classes\Joints.cs" />
     <Compile Include="Classes\CrossSection.cs" />
     <Compile Include="Classes\Load.cs" />
     <Compile Include="Classes\Material.cs" />
@@ -95,7 +96,7 @@
   <PropertyGroup>
     <PostBuildEvent>Copy "$(TargetPath)" "$(TargetDir)$(ProjectName).gha"
 Erase "$(TargetPath)"
-Copy "$(TargetDir)$(ProjectName).gha" "C:\Users\simon\AppData\Roaming\Grasshopper\Libraries"</PostBuildEvent>
+Copy "$(TargetDir)$(ProjectName).gha" "C:\Program Files\Rhino 6\Plug-ins\</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <FallbackCulture>en-US</FallbackCulture>

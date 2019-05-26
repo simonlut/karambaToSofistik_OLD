@@ -17,6 +17,7 @@ using karambaToSofistik.Classes;
 
 namespace karambaToSofistik {
     public class karambaToSofistikComponent : GH_Component {
+
         // Component configuration
         public karambaToSofistikComponent() : base("karambaToSofistik", "ktS", "Converts a Karamba model to a .dat file readable by Sofistik", "Karamba3D", "Extra") { }
 
@@ -24,6 +25,7 @@ namespace karambaToSofistik {
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager) {
             pManager.AddParameter(new Param_Model(), "Model", "Model", "Model to convert", GH_ParamAccess.item);
             pManager.AddTextParameter("Path", "Path", "Save the .dat file to this path", GH_ParamAccess.item, @"");
+            pManager.AddBooleanParameter("Sofistikate", "Calc", "Calculates current DAT file", GH_ParamAccess.item, false);
         }
 
         // Registers all the output parameters for this component.
@@ -48,9 +50,13 @@ namespace karambaToSofistik {
             List<Beam> beams = new List<Beam>();
             List<Load> loads = new List<Load>();
 
+
             // We need to reset some variables because the objects are not freed until Grasshopper is unloaded
             Parser.id_count = 1;
-            Parser.loadcase_count[0] = 0;
+
+            bool iSofistik = false;
+
+            DA.GetData(2, ref iSofistik); 
 
             try {
                 // Load the data from Karamba
@@ -89,7 +95,7 @@ namespace karambaToSofistik {
 
                     }
 
-                    //Add beam ids to Cross sections
+                        //Add beam ids to Cross sections
                     foreach (Karamba.Elements.ModelBeam beam in model.elems)
                     {
                         foreach (CrossSection crosec in crossSections)
@@ -98,11 +104,7 @@ namespace karambaToSofistik {
                             {
                                 crosec.ids.Add(beam.ind.ToString());
                             }
-                            else
-                            {
-                                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Error: Please give unique names to the cross-section groups");
-                            }
-                          
+
                         }
 
                         foreach (Material material in materials)
@@ -111,16 +113,14 @@ namespace karambaToSofistik {
                             {
                                 material.ids.Add(beam.ind.ToString());
                             }
-                            else
-                            {
-                                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Error: Please give unique names to the cross-section groups");
-                            }
+
                         }
                     }
 
+
                     // Nodes
                     foreach (Karamba.Nodes.Node node in model.nodes) {
-                        nodes.Add(new Node(node));
+                    nodes.Add(new Node(node));
                     }
                     status += nodes.Count + " nodes loaded...\n";
 
@@ -148,7 +148,7 @@ namespace karambaToSofistik {
                     status += model.gravities.Count + " gravity loads added.\n";
                     foreach (Karamba.Loads.PointLoad load in model.ploads) {
                         Load current = new Load(load);
-                        current.node = nodes[load.node_ind];
+                        current.node = nodes[load.node_ind];                            
                         loads.Add(current);
                     }
                     status += model.ploads.Count + " point loads added.\n";
@@ -173,10 +173,10 @@ namespace karambaToSofistik {
                         
 
                         // If there is not target element, apply the load to the whole structure
-                        if (load.beamIds[0] == "") {
-                            current.beam_id = "";
-                            loads.Add(current);
-                        }
+                        //if (load.beamIds[0] == "") {
+                        //    current.beam_id = "";
+                        //    loads.Add(current);
+                        //}
                         else {
                             // We search the element
                             current.beam = beams.Find(delegate(Beam beam) {
@@ -227,11 +227,36 @@ namespace karambaToSofistik {
                     Parser parser = new Parser(materials, crossSections, nodes, beams, loads);
                     output = parser.file;
 
-                    if (path != "") {
+                    if (path != "")
+                    {
                         status += "Saving file to " + path + "\n";
+
                         System.IO.File.WriteAllText(@path, output);
                         status += "File saved!\n";
                     }
+
+
+
+                    if (iSofistik == true && Directory.Exists(@"C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018") && path != "")
+                    {
+                        string targetPath = System.IO.Path.GetFullPath(path);
+                        System.Diagnostics.Process process = new System.Diagnostics.Process();
+                        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                        startInfo.FileName = "cmd.exe";
+                        startInfo.Arguments = "/k cd C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018/ & sps -B " + targetPath + targetPath;
+                        process.StartInfo = startInfo;
+                        process.Start();
+                    }
+                    else if (Directory.Exists(@"C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018") == false)
+                    {
+                        System.Diagnostics.Process process = new System.Diagnostics.Process();
+                        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                        startInfo.FileName = "cmd.exe";
+                        startInfo.Arguments = "/k echo Directory for Sofistik 2018 not found. Set the directory path manually to your Sofistik main directory using a string. ";
+                        process.StartInfo = startInfo;
+                        process.Start();
+                    }
+
                 }
             }
             catch (Exception e) {
