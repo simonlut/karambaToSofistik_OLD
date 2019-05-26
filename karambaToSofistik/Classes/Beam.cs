@@ -35,7 +35,7 @@ namespace karambaToSofistik.Classes {
                }
 
         public string sofistring() {
-            return "BEAM NO " + id + " NA " + start.id + " NE " + end.id + " NCS " + sec.id;
+            return "BEAM NO " + id + " NA " + start.id + " NE " + end.id + " NCS " + sec.id + " DIV " + karambaToSofistikComponent.beamSplit;
         }
     }
 }

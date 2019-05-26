@@ -81,7 +81,7 @@ namespace karambaToSofistik.Classes {
                         if (beam_id == "")
                             from = "1 TO 999999";
                         else
-                            from = "GRP " + karambaToSofistikComponent.beam_groups.IndexOf(beam_id);
+                            from =  beam_id;
 
                         if (type == "E")
                         {
@@ -134,7 +134,7 @@ namespace karambaToSofistik.Classes {
                         if (beam_id == "")
                             from = "1 TO 999999";
                         else
-                            from = "GRP " + karambaToSofistikComponent.beam_groups.IndexOf(beam_id);
+                            from = (beam_id);
 
                         if (type == "E")
                         {

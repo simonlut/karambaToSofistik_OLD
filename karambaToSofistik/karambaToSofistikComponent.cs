@@ -17,6 +17,7 @@ using karambaToSofistik.Classes;
 
 namespace karambaToSofistik {
     public class karambaToSofistikComponent : GH_Component {
+        static public int beamSplit = 1;
 
         // Component configuration
         public karambaToSofistikComponent() : base("karambaToSofistik", "ktS", "Converts a Karamba model to a .dat file readable by Sofistik", "Karamba3D", "Extra") { }
@@ -24,8 +25,14 @@ namespace karambaToSofistik {
         // Registers all the input parameters for this component.
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager) {
             pManager.AddParameter(new Param_Model(), "Model", "Model", "Model to convert", GH_ParamAccess.item);
+            pManager.AddIntegerParameter("Beam Division", "Beam Division", "Equal division of beams in N pieces.", GH_ParamAccess.item);
             pManager.AddTextParameter("Path", "Path", "Save the .dat file to this path", GH_ParamAccess.item, @"");
-            pManager.AddBooleanParameter("Sofistikate", "Calc", "Calculates current DAT file", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Sofistikate", "Sofistikate", "Calculates current DAT file", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Open Teddy", "Open Teddy", "Open teddy with the correct code", GH_ParamAccess.item, false);
+            if (!Directory.Exists(@"C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018"))
+            {
+                pManager.AddTextParameter("Sofistik Main Folder", "Sofistik Main Folder", "Give the path to the main Sofistik folder (containing sps.exe)", GH_ParamAccess.item);
+            }
         }
 
         // Registers all the output parameters for this component.
@@ -55,8 +62,17 @@ namespace karambaToSofistik {
             Parser.id_count = 1;
 
             bool iSofistik = false;
+            string sofistikPath = "";
+            bool iTeddy = false;
 
-            DA.GetData(2, ref iSofistik); 
+            DA.GetData(1, ref beamSplit);
+            DA.GetData(3, ref iSofistik);
+            DA.GetData(4, ref iTeddy);
+            if (!Directory.Exists(@"C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018"))
+            {
+
+                DA.GetData(5, ref sofistikPath);
+            }
 
             try {
                 // Load the data from Karamba
@@ -72,7 +88,7 @@ namespace karambaToSofistik {
                 }
                 else {
                     string path = null;
-                    if (!DA.GetData<string>(1, ref path)) { path = ""; }
+                    if (!DA.GetData<string>(2, ref path)) { path = ""; }
                     if (path == "") {
                         status += "No file path specified. Will not save data to a .dat file.\n";
                     }
@@ -95,7 +111,7 @@ namespace karambaToSofistik {
 
                     }
 
-                        //Add beam ids to Cross sections
+                        //Add beam ID's to crossections/materials/loads
                     foreach (Karamba.Elements.ModelBeam beam in model.elems)
                     {
                         foreach (CrossSection crosec in crossSections)
@@ -115,6 +131,7 @@ namespace karambaToSofistik {
                             }
 
                         }
+
                     }
 
 
@@ -170,19 +187,27 @@ namespace karambaToSofistik {
                         //else if (pret != null) {
                         //    current = new Load(pret);
                         //}
-                        
 
-                        // If there is not target element, apply the load to the whole structure
-                        //if (load.beamIds[0] == "") {
-                        //    current.beam_id = "";
-                        //    loads.Add(current);
-                        //}
-                        else {
-                            // We search the element
-                            current.beam = beams.Find(delegate(Beam beam) {
-                                return beam.user_id == load.beamIds[0];
-                            });
+                        //If there is not target element, apply the load to the whole structure
+
+
+
+
+
+                        if (load.beamIds[0] == "")
+                        {
+                            current.beam_id = "";
                             loads.Add(current);
+                        }
+                        else
+                        {
+
+                            // We search the element
+                            foreach (string beamid in load.beamIds)
+                            {
+                                current.beam.user_id = beamid;
+                                loads.Add(current);
+                            }
                         }
                     }
 
@@ -239,23 +264,37 @@ namespace karambaToSofistik {
 
                     if (iSofistik == true && Directory.Exists(@"C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018") && path != "")
                     {
-                        string targetPath = System.IO.Path.GetFullPath(path);
+                        string targetPath = Path.GetFullPath(path);
                         System.Diagnostics.Process process = new System.Diagnostics.Process();
                         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                         startInfo.FileName = "cmd.exe";
-                        startInfo.Arguments = "/k cd C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018/ & sps -B " + targetPath + targetPath;
+                        startInfo.Arguments = "/k cd C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018/ & sps -B " + targetPath;
                         process.StartInfo = startInfo;
                         process.Start();
                     }
                     else if (Directory.Exists(@"C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018") == false)
                     {
+                        string targetPath = Path.GetFullPath(path);
+                        string sofPath = Path.GetFullPath(sofistikPath);
                         System.Diagnostics.Process process = new System.Diagnostics.Process();
                         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                         startInfo.FileName = "cmd.exe";
-                        startInfo.Arguments = "/k echo Directory for Sofistik 2018 not found. Set the directory path manually to your Sofistik main directory using a string. ";
+                        startInfo.Arguments = "/k cd "+ sofPath + " & sps -B " + targetPath;
                         process.StartInfo = startInfo;
                         process.Start();
                     }
+
+                    if (iTeddy)
+                    {
+                        string targetPath = Path.GetFullPath(path);
+                        System.Diagnostics.Process process = new System.Diagnostics.Process();
+                        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                        startInfo.FileName = "cmd.exe";
+                        startInfo.Arguments = "/c"+targetPath;
+                        process.StartInfo = startInfo;
+                        process.Start();
+                    }
+
 
                 }
             }
