@@ -81,7 +81,7 @@ namespace karambaToSofistik.Classes {
                                     file += "BEAM NO (" + cluster_start + " " + (cluster_start + iterator - 1) + " 1)"
                                           + " NA (" + node_start + " 1)"
                                           + " NE (" + node_end + " 1)"
-                                          + " NCS " + crosec + "DIV" + karambaToSofistikComponent.beamSplit + "\n";
+                                          + " NCS " + crosec + " DIV " + karambaToSofistikComponent.beamSplit + "\n";
                                 }
 
                                 // Start a new cluster
@@ -110,7 +110,7 @@ namespace karambaToSofistik.Classes {
                         file += "BEAM NO (" + cluster_start + " " + (cluster_start + iterator - 1) + " 1)"
                               + " NA (" + node_start + " 1)"
                               + " NE (" + node_end + " 1)"
-                              + " NCS " + crosec + "DIV" + karambaToSofistikComponent.beamSplit + "\n";
+                              + " NCS " + crosec + " DIV " + karambaToSofistikComponent.beamSplit + "\n";
                     }
                 }
             }

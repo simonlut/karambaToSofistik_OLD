@@ -177,21 +177,12 @@ namespace karambaToSofistik {
                         //Karamba.Loads.PreTensionLoad pret = load as Karamba.Loads.PreTensionLoad;
                         Karamba.Loads.TemperatureLoad temp = load as Karamba.Loads.TemperatureLoad;
 
-                        if (line != null) {
-                            current = new Load(line);
-                        }
-                        // Very important to check Temperature BEFORE Pretension becaus Temperature derivates from Pretension
-                        else if (temp != null) {
-                            current = new Load(temp);
-                        }
+
                         //else if (pret != null) {
                         //    current = new Load(pret);
                         //}
 
                         //If there is not target element, apply the load to the whole structure
-
-
-
 
 
                         if (load.beamIds[0] == "")
@@ -205,7 +196,17 @@ namespace karambaToSofistik {
                             // We search the element
                             foreach (string beamid in load.beamIds)
                             {
+                                if (line != null)
+                                {
+                                    current = new Load(line);
+                                }
+                                // Very important to check Temperature BEFORE Pretension becaus Temperature derivates from Pretension
+                                else if (temp != null)
+                                {
+                                    current = new Load(temp);
+                                }
                                 current.beam.user_id = beamid;
+                                current.beam_id = beamid;
                                 loads.Add(current);
                             }
                         }

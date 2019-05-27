@@ -78,11 +78,12 @@ namespace karambaToSofistik.Classes {
                     case "S":
                     case "T":
                         string from = "";
-                        if (beam_id == "")
+                        if (beam_id == "" || beam_id == "0")
                             from = "1 TO 999999";
-                        else
-                            from =  beam_id;
-
+                        else {
+                            int beamStringToInt = System.Convert.ToInt32(beam_id);
+                            from = (Math.Abs(karambaToSofistikComponent.beam_groups.IndexOf(beam_id) * 1000 )+ beamStringToInt).ToString();
+                        }
                         if (type == "E")
                         {
                             string load_type = "";
@@ -93,7 +94,7 @@ namespace karambaToSofistik.Classes {
                             else
                                 load_type = "PXX,PYY,PZZ";
 
-                            return "LC NO " + id + " TYPE L\nBEAM FROM " + from
+                            return "LC NO " + lc_no + " TYPE L\nBEAM FROM " + from
                                                  + " TYPE " + load_type
                                                  + " PA " + Math.Round(force.X, 3)
                                                  + "," + Math.Round(force.Y, 3)
@@ -101,12 +102,12 @@ namespace karambaToSofistik.Classes {
                         }
                         else if (type == "S")
                         {
-                            return "LC NO " + id + " TYPE L\nBEAM FROM " + from
+                            return "LC NO " + lc_no + " TYPE L\nBEAM FROM " + from
                                                  + " TYPE PNX PA " + coef;
                         }
                         else if (type == "T")
                         {
-                            return "LC NO " + id + " TYPE L\nBEAM FROM " + from
+                            return "LC NO " + lc_no + " TYPE L\nBEAM FROM " + from
                                                  + " TYPE TEMP PA " + coef;
                         }
                         break;
@@ -131,11 +132,13 @@ namespace karambaToSofistik.Classes {
                     case "S":
                     case "T":
                         string from = "";
-                        if (beam_id == "")
+                        if (beam_id == "" || beam_id == "0")
                             from = "1 TO 999999";
                         else
-                            from = (beam_id);
-
+                        {
+                            int beamStringToInt = System.Convert.ToInt32(beam_id);
+                            from = (Math.Abs(karambaToSofistikComponent.beam_groups.IndexOf(beam_id) * 1000) + beamStringToInt).ToString();
+                        }
                         if (type == "E")
                         {
                             string load_type = "";
