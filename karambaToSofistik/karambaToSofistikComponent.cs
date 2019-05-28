@@ -17,11 +17,10 @@ using karambaToSofistik.Classes;
 
 namespace karambaToSofistik {
     public class karambaToSofistikComponent : GH_Component {
-        static public int beamSplit = 1;
 
         // Component configuration
         public karambaToSofistikComponent() : base("karambaToSofistik", "ktS", "Converts a Karamba model to a .dat file readable by Sofistik", "Karamba3D", "Extra") { }
-
+        
         // Registers all the input parameters for this component.
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager) {
             pManager.AddParameter(new Param_Model(), "Model", "Model", "Model to convert", GH_ParamAccess.item);
@@ -43,6 +42,8 @@ namespace karambaToSofistik {
 
         // We need to register all groups defined in Grasshopper
         static public List<string> beam_groups = new List<string>();
+        static public int beamSplit = 1;
+        static public string filePath = "";
 
         // This is the method that actually does the work.
         protected override void SolveInstance(IGH_DataAccess DA) {
@@ -91,8 +92,8 @@ namespace karambaToSofistik {
                     if (!DA.GetData<string>(2, ref path)) { path = ""; }
                     if (path == "") {
                         status += "No file path specified. Will not save data to a .dat file.\n";
+                        filePath = path;
                     }
-
 
 
                     // Retrieve and store the data

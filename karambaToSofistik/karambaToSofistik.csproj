@@ -75,6 +75,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="SofistikCdb\AccesSofData.cs" />
+    <Compile Include="SofistikCdb\SofistikData.cs" />
+    <Compile Include="SofistikCdb\sofistik_daten.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">
@@ -107,5 +110,7 @@ Copy "$(TargetDir)$(ProjectName).gha" "C:\Program Files\Rhino 6\Plug-ins\</PostB
     </StartArguments>
     <StartAction>Program</StartAction>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 </Project>

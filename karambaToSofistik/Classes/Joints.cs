@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace karambaToSofistik.Classes
 {
-    class Joints
+    class Joint
     {
+        public Joint()
+        {
+
+        }
+
+
     }
 }
