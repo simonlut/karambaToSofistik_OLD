@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;       //importing DLLS
 
 
-namespace karambaToSofistik.SofistikCdb
+namespace karambaToSofistik.AccessSofistik
 {
-    public class BeamForces
-    {
         public unsafe struct beamForces                  //        102/LC:0  Maximum of Total Beam forces and deformations
         {
             public int m_id;                           //        identifier 0
@@ -35,15 +33,4 @@ namespace karambaToSofistik.SofistikCdb
             public float m_pty;                        // [1095] local y component of transverse bedding
             public float m_ptz;                        // [1095] local z component of transverse bedding
         } // cs_beam_foc
-
-        // sof_cdb_get
-        [DllImport("cdb_w50_x64.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int sof_cdb_get(
-            int index_,
-            int kwh_,
-            int kwl_,
-            ref beamForces data_,
-            ref int recLen_,
-            int pos);
-    }
 }

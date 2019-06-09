@@ -36,7 +36,7 @@ namespace karambaToSofistik.Classes {
         }
 
         public void hydrate(Karamba.CrossSections.CroSec crosec, int cros_id) {
-            id = cros_id; // Sofistik begins at 1 not 0
+            id = cros_id + 1; // Sofistik begins at 1 not 0
             ids = crosec.elemIds;
             name = crosec.name;
             shape = crosec.shape();

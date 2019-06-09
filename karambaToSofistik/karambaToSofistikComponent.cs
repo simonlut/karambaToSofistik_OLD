@@ -28,6 +28,7 @@ namespace karambaToSofistik {
             pManager.AddTextParameter("Path", "Path", "Save the .dat file to this path", GH_ParamAccess.item, @"");
             pManager.AddBooleanParameter("Sofistikate", "Sofistikate", "Calculates current DAT file", GH_ParamAccess.item, false);
             pManager.AddBooleanParameter("Open Teddy", "Open Teddy", "Open teddy with the correct code", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Connect Database", "Connect Database", "Conenct to the sofistik database", GH_ParamAccess.item, false);
             if (!Directory.Exists(@"C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018"))
             {
                 pManager.AddTextParameter("Sofistik Main Folder", "Sofistik Main Folder", "Give the path to the main Sofistik folder (containing sps.exe)", GH_ParamAccess.item);
@@ -38,12 +39,15 @@ namespace karambaToSofistik {
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager) {
             pManager.Register_StringParam("Output", "Output", "Converted model");
             pManager.Register_StringParam("Status", "Status", "Errors or success messages");
+            pManager.Register_StringParam("Beamforces", "Beamforces", "Beamforces", GH_ParamAccess.list);
         }
 
         // We need to register all groups defined in Grasshopper
         static public List<string> beam_groups = new List<string>();
         static public int beamSplit = 1;
         static public string filePath = "";
+        
+       
 
         // This is the method that actually does the work.
         protected override void SolveInstance(IGH_DataAccess DA) {
@@ -65,14 +69,21 @@ namespace karambaToSofistik {
             bool iSofistik = false;
             string sofistikPath = "";
             bool iTeddy = false;
+            bool AccessDatabase = false;
 
             DA.GetData(1, ref beamSplit);
             DA.GetData(3, ref iSofistik);
             DA.GetData(4, ref iTeddy);
+            DA.GetData(5, ref AccessDatabase);
             if (!Directory.Exists(@"C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018"))
             {
 
-                DA.GetData(5, ref sofistikPath);
+                DA.GetData(6, ref sofistikPath);
+            }
+
+            if (AccessDatabase)
+            {
+                AccessSofistik.AccessSofData.Main();
             }
 
             try {
@@ -188,6 +199,7 @@ namespace karambaToSofistik {
 
                         if (load.beamIds[0] == "")
                         {
+
                             current.beam_id = "";
                             loads.Add(current);
                         }
@@ -207,7 +219,7 @@ namespace karambaToSofistik {
                                     current = new Load(temp);
                                 }
                                 current.beam.user_id = beamid;
-                                current.beam_id = beamid;
+                                current.beam_id = (beamid);
                                 loads.Add(current);
                             }
                         }
@@ -304,9 +316,17 @@ namespace karambaToSofistik {
                 status += "\nERROR!\n" + e.ToString() + "\n" + e.Data;
             }
 
+            Rhino.Collections.RhinoList<string> oBeamForces = new Rhino.Collections.RhinoList<string>();
+                
+            foreach(string force in AccessSofistik.AccessSofData.SofBeamForces)
+            {
+                oBeamForces.Add(force.ToString());
+            }
+
             // Return data
             DA.SetData(0, output);
             DA.SetData(1, status);
+            DA.SetDataList(2, AccessSofistik.AccessSofData.SofBeamForces);
         }
 
         // Icon

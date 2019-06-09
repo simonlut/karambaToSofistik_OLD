@@ -82,7 +82,7 @@ namespace karambaToSofistik.Classes {
                             from = "1 TO 999999";
                         else {
                             int beamStringToInt = System.Convert.ToInt32(beam_id);
-                            from = (Math.Abs(karambaToSofistikComponent.beam_groups.IndexOf(beam_id) * 1000 )+ beamStringToInt).ToString();
+                            from = (Math.Abs(karambaToSofistikComponent.beam_groups.IndexOf(beam_id) * 1000 )+ beamStringToInt + 1).ToString();
                         }
                         if (type == "E")
                         {
@@ -137,7 +137,7 @@ namespace karambaToSofistik.Classes {
                         else
                         {
                             int beamStringToInt = System.Convert.ToInt32(beam_id);
-                            from = (Math.Abs(karambaToSofistikComponent.beam_groups.IndexOf(beam_id) * 1000) + beamStringToInt).ToString();
+                            from = (Math.Abs(karambaToSofistikComponent.beam_groups.IndexOf(beam_id) * 1000 ) + beamStringToInt + 1).ToString();
                         }
                         if (type == "E")
                         {

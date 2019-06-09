@@ -4,39 +4,96 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Runtime.InteropServices;       //importing DLLS
 
 namespace ConsoleApp1
 {
-    class Program
+    public static class AccesSofData
     {
-        static void Main(string[] args)
+
+        // In this example 64bit dlls are used (Visual Studio Platform 64bit)
+
+        // sof_cdb_init
+        [DllImport("cdb_w50_x64.dll", CallingConvention = CallingConvention.Cdecl)]
+        // [DllImport("cdb_w33_x64.lib")]
+        public static extern int sof_cdb_init(
+            string name_,
+            int initType_
+        );
+
+        // sof_cdb_close
+        [DllImport("cdb_w50_x64.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void sof_cdb_close(
+            int index_);
+
+        // sof_cdb_status
+        [DllImport("cdb_w50_x64.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int sof_cdb_status(
+            int index_);
+
+        // sof_cdb_flush
+        [DllImport("cdb_w50_x64.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int sof_cdb_flush(
+            int index_);
+
+        // sof_cdb_flush
+        [DllImport("cdb_w50_x64.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int sof_cdb_free(
+            int kwh_,
+            int kwl_);
+
+        // sof_cdb_flush
+        [DllImport("cdb_w50_x64.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void sof_cdb_kenq_ex(
+            int index,
+            ref int kwh_,
+            ref int kwl_,
+            int request_);
+
+        public static unsafe void Main(string[] args)
         {
-            // The code provided will print ‘Hello World’ to the console.
-            // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
-            string path = "C:/Users/simon/Downloads/so/sof.dat";
-            string targetPath = System.IO.Path.GetFullPath(path);
+            int index = 0;
+            int status = 0;
+            int datalen;
 
-            if(Directory.Exists(@"C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018"))
+            string directory = @"C:\\ Program Files \\ SOFiSTiK \\2018\\ SOFiSTiK2018\\ interfaces \\64 bit";
+            string cdbPath = Path.GetDirectoryName("C: \\Users\\simon\\Downloads\\so\\sof.dat") + "\\" + Path.GetFileNameWithoutExtension("C: \\Users\\simon\\Downloads\\so\\sof.dat") + ".cdb";
+
+
+            // Get the Path
+
+            string path = Environment.GetEnvironmentVariable("path");
+
+            // Set the new path with the directory
+            path = directory + ";" + path;
+
+            // Set the path variable (to read the data from the CDB)
+            System.Environment.SetEnvironmentVariable("path", path);
+
+            // Connect to cdb
+            index = sof_cdb_init(@cdbPath, 99);
+
+            // Check if sof_cdb_flush is working
+            status = sof_cdb_flush(index);
+
+            // Print index and status
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            startInfo.FileName = "cmd.exe";
+            startInfo.Arguments = " /k" + "echo Index: " + index + " & echo Status: " + status;
+            process.StartInfo = startInfo;
+
+            if (sof_cdb_status(index) == 0)
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = "/k cd C:/Program Files/SOFiSTiK/2018/SOFiSTiK 2018/ & sps -B " + targetPath;
-                process.StartInfo = startInfo;
-                process.Start();
+                startInfo.Arguments = ("CDB status = 0, CDB closed succesfylly");
             }
-
             else
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = "/k echo Directory for Sofistik 2018 not found. Set the directory path manually to your Sofistik main directory using a string. "
-                process.StartInfo = startInfo;
-                process.Start();
+                startInfo.Arguments = ("CDB Status <> 0, the CDB doesn't close succesfully.");
             }
 
-            // Go to http://aka.ms/dotnet-get-started-console to continue learning how to build a console app! 
+            process.Start();
         }
     }
 }

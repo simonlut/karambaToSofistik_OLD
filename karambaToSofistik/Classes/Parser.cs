@@ -126,6 +126,7 @@ namespace karambaToSofistik.Classes {
                     loadcase_index.Add(load.loadcase);
                 }
             }
+            loadcase_index.Sort();
 
             for (int i=0; i<loadcase_index.Count; i++)
             {   foreach (Load load in loads)
