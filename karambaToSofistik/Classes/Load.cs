@@ -17,7 +17,6 @@ namespace karambaToSofistik.Classes {
         public int loadcase;
 
 
-
         public void init(string par_type) {
             type = par_type;
             beam = new Beam();

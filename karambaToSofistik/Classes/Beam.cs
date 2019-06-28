@@ -34,6 +34,9 @@ namespace karambaToSofistik.Classes {
                 karambaToSofistikComponent.beam_groups.Add(beam.id);
                }
 
+        
+       
+
         public string sofistring() {
             return "BEAM NO " + id + " NA " + start.id + " NE " + end.id + " NCS " + sec.id + " DIV " + karambaToSofistikComponent.beamSplit;
         }
